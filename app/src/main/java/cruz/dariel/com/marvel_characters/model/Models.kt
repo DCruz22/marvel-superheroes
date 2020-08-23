@@ -16,7 +16,7 @@ data class Character(
     val id: Int = 0,
     val name: String = "",
     val description: String = "",
-    val thumbnail: Image
+    val thumbnail: Image? = null
 )
 
 data class Image(

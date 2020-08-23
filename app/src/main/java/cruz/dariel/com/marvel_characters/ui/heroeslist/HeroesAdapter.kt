@@ -10,9 +10,14 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import cruz.dariel.com.marvel_characters.R
 import cruz.dariel.com.marvel_characters.databinding.ItemHeroeBinding
 import cruz.dariel.com.marvel_characters.model.Character
+import cruz.dariel.com.marvel_characters.util.getPath
 import kotlinx.android.synthetic.main.item_heroe.view.*
 
-class HeroesAdapter(): RecyclerView.Adapter<HeroesAdapter.HeroesViewHolder>() {
+class HeroesAdapter(private val itemListener: HeroeItemListener): RecyclerView.Adapter<HeroesAdapter.HeroesViewHolder>() {
+
+    interface HeroeItemListener {
+        fun onMovieClicked(id: Int)
+    }
 
     private val heroesList = ArrayList<Character>()
 
@@ -24,7 +29,7 @@ class HeroesAdapter(): RecyclerView.Adapter<HeroesAdapter.HeroesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeroesViewHolder {
         val itemView = ItemHeroeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return HeroesViewHolder(itemView)
+        return HeroesViewHolder(itemView, itemListener)
     }
 
     override fun getItemCount(): Int {
@@ -36,16 +41,25 @@ class HeroesAdapter(): RecyclerView.Adapter<HeroesAdapter.HeroesViewHolder>() {
         holder.bindData(character)
     }
 
-    inner class HeroesViewHolder(private val itemHeroeBinding: ItemHeroeBinding) : RecyclerView.ViewHolder(itemHeroeBinding.root){
+    inner class HeroesViewHolder(private val itemHeroeBinding: ItemHeroeBinding, itemListener: HeroeItemListener) : RecyclerView.ViewHolder(itemHeroeBinding.root), View.OnClickListener{
+
+        init {
+            itemHeroeBinding.root.setOnClickListener(this)
+        }
+
+        private lateinit var heroe: Character
 
         fun bindData(character: Character){
-            val url = "${character.thumbnail.path}/portrait_medium.${character.thumbnail.extension}".replace("http", "https")
+            this.heroe = character
             itemHeroeBinding.heroeTv.text = character.name
             Glide.with(itemHeroeBinding.root)
-                .load(url)
+                .load(character.thumbnail?.getPath())
                 .circleCrop()
                 .into(itemHeroeBinding.heroeIv)
         }
 
+        override fun onClick(p0: View?) {
+            itemListener.onMovieClicked(heroe.id)
+        }
     }
 }

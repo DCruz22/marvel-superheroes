@@ -8,6 +8,19 @@
     <fragment
         android:id="@+id/heroesListFragment"
         android:name="cruz.dariel.com.marvel_characters.ui.heroeslist.HeroesListFragment"
-        android:label="fragment_heroes_list"
-        tools:layout="@layout/fragment_heroes_list" />
+        android:label="Heroes"
+        tools:layout="@layout/fragment_heroes_list" >
+        <action
+            android:id="@+id/action_heroesListFragment_to_heroDetailsFragment"
+            app:destination="@id/heroDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/heroDetailsFragment"
+        android:name="cruz.dariel.com.marvel_characters.ui.herodetails.HeroDetailsFragment"
+        android:label="Heroe Details"
+        tools:layout="@layout/fragment_heroe_details" >
+        <action
+            android:id="@+id/action_heroDetailsFragment_to_heroesListFragment"
+            app:destination="@id/heroesListFragment" />
+    </fragment>
 </navigation>

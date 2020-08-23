@@ -12,28 +12,33 @@ import retrofit2.Response
 
 class HeroeRepository(private val clientService: RetrofitClient) {
 
-    fun getHeroes(): MutableLiveData<ArrayList<Character>>{
+    fun getHeroes(): MutableLiveData<ArrayList<Character>> {
 
         val heroes: MutableLiveData<ArrayList<Character>> = MutableLiveData()
-        val hashMap = mapOf("ts" to CalculatedValues.ts,
+        val hashMap = mapOf(
+            "ts" to CalculatedValues.ts,
             "apikey" to Constants.PUBLIC_API_KEY,
-            "hash" to CalculatedValues.hash)
-        clientService.marvelService.getHeroes(hashMap).enqueue(object : Callback<CharacterDataWrapper> {
+            "hash" to CalculatedValues.hash
+        )
+        clientService.marvelService.getHeroes(hashMap)
+            .enqueue(object : Callback<CharacterDataWrapper> {
 
-            override fun onResponse(call: Call<CharacterDataWrapper>, response: Response<CharacterDataWrapper>) {
-                if(response.isSuccessful){
-                    response.body()?.let {
-                        heroes.value = it.data.results
+                override fun onResponse(
+                    call: Call<CharacterDataWrapper>,
+                    response: Response<CharacterDataWrapper>
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            heroes.value = it.data.results
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<CharacterDataWrapper>, t: Throwable) {
-                heroes.value = null
-            }
-        })
+                override fun onFailure(call: Call<CharacterDataWrapper>, t: Throwable) {
+                    heroes.value = null
+                }
+            })
 
         return heroes
     }
-
 }
